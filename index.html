@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>狮子AI - 狮子AI Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'JetBrains Mono', monospace; }
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            background: url('bg.png') center center / cover no-repeat fixed;
+        }
+        .border-custom { border-color: #1a1a1a; }
+        .text-gray-secondary { color: #999999; }
+        .text-accent { color: #10b981; }
+        .bg-accent { background-color: #10b981; }
+        .border-accent { border-color: #10b981; }
+
+        .hero-bg {
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(10,10,10,0.2) 0%, rgba(10,10,10,0.4) 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        .hero-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(rgba(16, 185, 129, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(16, 185, 129, 0.02) 1px, transparent 1px);
+            background-size: 80px 80px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 2;
+        }
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .scanline {
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.15), transparent);
+            animation: scanlineMove 6s linear infinite;
+            left: 0;
+        }
+        @keyframes scanlineMove {
+            0% { top: -2px; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        .corner-decoration { position: absolute; width: 100px; height: 100px; border-color: rgba(16, 185, 129, 0.2); }
+        .corner-tl { top: 20px; left: 20px; border-left: 1px solid; border-top: 1px solid; }
+        .corner-tr { top: 20px; right: 20px; border-right: 1px solid; border-top: 1px solid; }
+        .corner-bl { bottom: 20px; left: 20px; border-left: 1px solid; border-bottom: 1px solid; }
+        .corner-br { bottom: 20px; right: 20px; border-right: 1px solid; border-bottom: 1px solid; }
+
+        .particle {
+            position: fixed;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 4px #10b981;
+            animation: float 4s ease-in-out infinite, pulse 3s ease-in-out infinite;
+            z-index: 3;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        .particle:nth-child(1) { width: 4px; height: 4px; left: 5%; top: 15%; animation-delay: 0s, 0s; }
+        .particle:nth-child(2) { width: 3px; height: 3px; left: 15%; top: 75%; animation-delay: 0.5s, 0.3s; }
+        .particle:nth-child(3) { width: 5px; height: 5px; left: 25%; top: 25%; animation-delay: 1s, 0.6s; }
+        .particle:nth-child(4) { width: 3px; height: 3px; left: 35%; top: 85%; animation-delay: 1.5s, 0.9s; }
+        .particle:nth-child(5) { width: 4px; height: 4px; left: 45%; top: 45%; animation-delay: 2s, 0.2s; }
+        .particle:nth-child(6) { width: 3px; height: 3px; left: 55%; top: 65%; animation-delay: 2.5s, 0.5s; }
+        .particle:nth-child(7) { width: 4px; height: 4px; left: 65%; top: 35%; animation-delay: 0.3s, 0.7s; }
+        .particle:nth-child(8) { width: 3px; height: 3px; left: 75%; top: 55%; animation-delay: 0.8s, 0.1s; }
+        .particle:nth-child(9) { width: 4px; height: 4px; left: 85%; top: 15%; animation-delay: 1.3s, 0.4s; }
+        .particle:nth-child(10) { width: 3px; height: 3px; left: 90%; top: 80%; animation-delay: 1.8s, 0.8s; }
+        .particle:nth-child(11) { width: 5px; height: 5px; left: 10%; top: 50%; animation-delay: 2.2s, 0.2s; }
+        .particle:nth-child(12) { width: 3px; height: 3px; left: 50%; top: 20%; animation-delay: 0.2s, 0.6s; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.3); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; box-shadow: 0 0 3px #10b981; }
+            50% { opacity: 0.6; box-shadow: 0 0 6px #10b981; }
+        }
+
+        .hero-content { position: relative; z-index: 10; }
+        .nav-link { color: #aaaaaa; transition: color 0.2s; }
+        .nav-link:hover { color: #ffffff; }
+
+        .lang-toggle {
+            background: transparent;
+            border: 1px solid #1a1a1a;
+            color: #888888;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .lang-toggle:hover { border-color: #10b981; color: #10b981; }
+        .lang-toggle.active { border-color: #10b981; color: #10b981; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <nav class="fixed top-0 left-0 right-0 z-40 px-6 py-5 flex items-center justify-between border-b border-custom" style="background-color: rgba(10, 10, 10, 0.9); backdrop-filter: blur(10px);">
+        <a href="#" class="text-white font-bold text-lg">狮子AI</a>
+        <div class="flex items-center gap-8">
+            <a href="#work" class="nav-link text-sm" data-lang="nav-work">Projects</a>
+            <a href="#about" class="nav-link text-sm" data-lang="nav-about">About</a>
+            <a href="#contact" class="nav-link text-sm" data-lang="nav-contact">Contact</a>
+            <div class="flex gap-2">
+                <button class="lang-toggle" data-lang="en">EN</button>
+                <button class="lang-toggle active" data-lang="zh">中文</button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-bg min-h-screen flex flex-col items-center justify-center px-6 pt-16">
+        <div class="corner-decoration corner-tl"></div>
+        <div class="corner-decoration corner-tr"></div>
+        <div class="corner-decoration corner-bl"></div>
+        <div class="corner-decoration corner-br"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="scanline"></div>
+        <div class="hero-content text-center">
+            <h1 class="text-5xl md:text-8xl font-bold tracking-tight text-white mb-6">狮子AI</h1>
+            <p class="text-lg md:text-xl text-gray-secondary mb-2" data-lang="hero-sub">Creative Developer & Designer</p>
+            <p class="text-sm text-gray-secondary mt-6" data-lang="hero-desc">Building digital experiences</p>
+        </div>
+    </section>
+
+    <div id="wechatModal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden">
+        <div class="bg-[#1a1a1a] p-6 border border-custom max-w-sm w-full mx-4">
+            <p class="text-center text-gray-secondary mb-4" data-lang="wechat-title">Scan to add WeChat</p>
+            <div class="bg-[#2a2a2a] aspect-square flex items-center justify-center border border-custom">
+                <span class="text-gray-secondary">WeChat QR</span>
+            </div>
+            <button onclick="hideWechatQR()" class="mt-4 w-full py-2 text-sm text-gray-secondary hover:text-white transition-colors" data-lang="modal-close">Close</button>
+        </div>
+    </div>
+
+    <section id="about" class="py-24 px-6 border-t border-custom">
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-12 tracking-tight" data-lang="about-title">ABOUT ME</h2>
+        <div class="max-w-3xl">
+            <div class="bg-[#181818] border border-custom p-8 md:p-12">
+                <p class="text-gray-400 leading-relaxed mb-4 text-lg" data-lang="about-p1">I am a product manager with years of internet product experience.</p>
+                <p class="text-gray-400 leading-relaxed mb-4 text-lg" data-lang="about-p2">Currently focusing on AI and OPC (Original Product Creation), dedicated to building valuable products from scratch.</p>
+                <p class="text-gray-400 leading-relaxed text-lg" data-lang="about-p3">Building products solo — from concept and design to development and launch.</p>
+                <div class="flex gap-8 mt-8 pt-8 border-t border-custom flex-wrap">
+                    <div>
+                        <p class="text-4xl font-bold text-accent">5+</p>
+                        <p class="text-base text-gray-400 mt-2" data-lang="stat-years">Years Experience</p>
+                    </div>
+                    <div>
+                        <p class="text-4xl font-bold text-accent">10+</p>
+                        <p class="text-base text-gray-400 mt-2" data-lang="stat-projects">Projects Built</p>
+                    </div>
+                    <div>
+                        <p class="text-4xl font-bold text-accent">AI</p>
+                        <p class="text-base text-gray-400 mt-2" data-lang="stat-focus">Focus Area</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="work" class="py-24 px-6 border-t border-custom">
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-12 tracking-tight" data-lang="work-title">SELECTED WORK</h2>
+        <div class="grid md:grid-cols-2 gap-8 max-w-5xl">
+            <div class="bg-[#181818] border border-custom group hover:border-[#333] transition-colors">
+                <div class="bg-[#222] aspect-video flex items-center justify-center border-b border-custom overflow-hidden p-4">
+                    <img src="project-logo.png" alt="Hermes Agent" class="max-w-full max-h-full object-contain">
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-accent transition-colors" data-lang="project1-title">Hermes-doc-cn</h3>
+                    <p class="text-gray-400 text-base mb-4" data-lang="project1-desc">Hermes Agent 非官方中文翻译文档，基于 Docusaurus 构建，涵盖安装配置、功能特性与最佳实践。</p>
+                    <a href="http://hermes-doc-cn.huangjiarong.top/" target="_blank" class="text-accent text-base hover:underline" data-lang="project-link">去看看 →</a>
+                </div>
+            </div>
+            <div class="bg-[#181818] border border-custom group hover:border-[#333] transition-colors">
+                <div class="bg-[#222] aspect-video flex items-center justify-center border-b border-custom overflow-hidden">
+                    <span class="text-gray-500">Project Image 16:9</span>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-accent transition-colors" data-lang="project2-title">Project Name</h3>
+                    <p class="text-gray-400 text-base mb-4" data-lang="project2-desc">Brief description of the project</p>
+                    <a href="#" class="text-accent text-base hover:underline" data-lang="project-link">View Project →</a>
+                </div>
+            </div>
+            <div class="bg-[#181818] border border-custom group hover:border-[#333] transition-colors">
+                <div class="bg-[#222] aspect-video flex items-center justify-center border-b border-custom overflow-hidden">
+                    <span class="text-gray-500">Project Image 16:9</span>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-accent transition-colors" data-lang="project3-title">Project Name</h3>
+                    <p class="text-gray-400 text-base mb-4" data-lang="project3-desc">Brief description of the project</p>
+                    <a href="#" class="text-accent text-base hover:underline" data-lang="project-link">View Project →</a>
+                </div>
+            </div>
+            <div class="bg-[#181818] border border-custom group hover:border-[#333] transition-colors">
+                <div class="bg-[#222] aspect-video flex items-center justify-center border-b border-custom overflow-hidden">
+                    <span class="text-gray-500">Project Image 16:9</span>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-accent transition-colors" data-lang="project4-title">Project Name</h3>
+                    <p class="text-gray-400 text-base mb-4" data-lang="project4-desc">Brief description of the project</p>
+                    <a href="#" class="text-accent text-base hover:underline" data-lang="project-link">View Project →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-24 px-6 border-t border-custom">
+        <div class="max-w-3xl">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-6 tracking-tight" data-lang="contact-title">LET'S CONNECT</h2>
+            <div class="bg-[#181818] border border-custom p-8 md:p-12">
+                <p class="text-gray-400 text-lg mb-6" data-lang="contact-desc">Have an idea or project? Let's connect.</p>
+                <a href="mailto:hjr597490544@qq.com" class="text-2xl md:text-3xl font-bold text-accent hover:underline">hjr597490544@qq.com</a>
+                <div class="flex gap-6 mt-8 pt-8 border-t border-custom flex-wrap">
+                    <button onclick="showWechatQR()" class="px-6 py-3 border border-accent text-accent hover:bg-accent hover:text-black transition-colors duration-200 text-base" data-lang="wechat-btn">WeChat</button>
+                    <a href="#" class="px-6 py-3 text-gray-400 hover:text-white transition-colors text-base">GitHub →</a>
+                    <a href="#" class="px-6 py-3 text-gray-400 hover:text-white transition-colors text-base">Twitter →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-8 px-6 border-t border-custom">
+        <div class="max-w-5xl mx-auto flex items-center justify-between">
+            <p class="text-gray-secondary text-sm">© 2026 狮子AI</p>
+            <p class="text-gray-secondary text-sm" data-lang="footer-built">Built with passion</p>
+        </div>
+    </footer>
+
+    <script>
+        const translations = {
+            en: {
+                'nav-work': 'Projects',
+                'nav-about': 'About',
+                'nav-contact': 'Contact',
+                'hero-sub': 'Creative Developer & Designer',
+                'hero-desc': 'Building digital experiences',
+                'wechat-title': 'Scan to add WeChat',
+                'modal-close': 'Close',
+                'about-title': 'ABOUT ME',
+                'about-p1': 'I am a product manager with years of internet product experience.',
+                'about-p2': 'Currently focusing on AI and OPC (Original Product Creation), dedicated to building valuable products from scratch.',
+                'about-p3': 'Building products solo — from concept and design to development and launch.',
+                'stat-years': 'Years Experience',
+                'stat-projects': 'Projects Built',
+                'stat-focus': 'Focus Area',
+                'work-title': 'SELECTED WORK',
+                'project1-title': 'Hermes-doc-cn',
+                'project1-desc': 'Unofficial Chinese translation of Hermes Agent documentation, built with Docusaurus, covering installation, configuration, features and best practices.',
+                'project2-title': 'Project Name',
+                'project2-desc': 'Brief description of the project',
+                'project3-title': 'Project Name',
+                'project3-desc': 'Brief description of the project',
+                'project4-title': 'Project Name',
+                'project4-desc': 'Brief description of the project',
+                'project-link': 'View Project →',
+                'contact-title': "LET'S CONNECT",
+                'contact-desc': 'Have an idea or project? Let\'s connect.',
+                'wechat-btn': 'WeChat',
+                'footer-built': '用心构建'
+            },
+            zh: {
+                'nav-work': '项目',
+                'nav-about': '关于',
+                'nav-contact': '联系',
+                'hero-sub': '产品经理 · 荣叔',
+                'hero-desc': '构建数字体验',
+                'wechat-title': '扫码添加我的微信',
+                'modal-close': '关闭',
+                'about-title': '关于我',
+                'about-p1': '我是一名产品经理，拥有多年互联网产品经验。',
+                'about-p2': '目前专注于 AI 和 OPC（Original Product Creation）方向，致力于从零到一打造有价值的产品。',
+                'about-p3': '一个人做产品，从构思、设计到开发上线，全程独立完成。',
+                'stat-years': '年经验',
+                'stat-projects': '项目数',
+                'stat-focus': '专注领域',
+                'work-title': '精选作品',
+                'project1-title': 'Hermes-doc-cn',
+                'project1-desc': 'Hermes Agent 非官方中文翻译文档，基于 Docusaurus 构建，涵盖安装配置、功能特性与最佳实践。',
+                'project2-title': '项目名称',
+                'project2-desc': '一句话描述这个项目的核心功能',
+                'project3-title': '项目名称',
+                'project3-desc': '一句话描述这个项目的核心功能',
+                'project4-title': '项目名称',
+                'project4-desc': '一句话描述这个项目的核心功能',
+                'project-link': '去看看 →',
+                'contact-title': '联系我',
+                'contact-desc': '有想法或项目需要合作？随时联系我。',
+                'wechat-btn': '微信',
+                'footer-built': '狮子AI·用心构建'
+            }
+        };
+
+        let currentLang = 'zh';
+
+        // Set default language to Chinese
+        document.addEventListener('DOMContentLoaded', () => setLanguage('zh'));
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('[data-lang]').forEach(el => {
+                const key = el.getAttribute('data-lang');
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+            document.querySelectorAll('.lang-toggle').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+            });
+            document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+        }
+
+        document.querySelectorAll('.lang-toggle').forEach(btn => {
+            btn.addEventListener('click', () => setLanguage(btn.getAttribute('data-lang')));
+        });
+
+        function showWechatQR() { document.getElementById('wechatModal').classList.remove('hidden'); }
+        function hideWechatQR() { document.getElementById('wechatModal').classList.add('hidden'); }
+        document.getElementById('wechatModal').addEventListener('click', function(e) { if (e.target === this) hideWechatQR(); });
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) { target.scrollIntoView({ behavior: 'smooth' }); }
+            });
+        });
+    </script>
+
+</body>
+</html>
