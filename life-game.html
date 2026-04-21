@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏人生 - 文字冒险实施方案 | 狮子AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'JetBrains Mono', monospace; }
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            background: url('bg.png') center center / cover no-repeat fixed;
+        }
+        .border-custom { border-color: #1a1a1a; }
+        .text-gray-secondary { color: #999999; }
+        .text-accent { color: #10b981; }
+        .bg-accent { background-color: #10b981; }
+        .border-accent { border-color: #10b981; }
+
+        .article-content h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #10b981;
+            margin: 2rem 0 1rem 0;
+        }
+        .article-content h3 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #ffffff;
+            margin: 1.5rem 0 0.75rem 0;
+        }
+        .article-content p {
+            color: #cccccc;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+        .article-content ul, .article-content ol {
+            color: #cccccc;
+            line-height: 1.8;
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .article-content li {
+            margin-bottom: 0.5rem;
+        }
+        .article-content pre {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-size: 0.85rem;
+        }
+        .article-content code {
+            background: #1a1a1a;
+            padding: 0.125rem 0.375rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        .article-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+        .article-content blockquote {
+            border-left: 3px solid #10b981;
+            padding-left: 1rem;
+            margin: 1rem 0;
+            color: #999;
+            font-style: italic;
+        }
+        .article-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        .article-content th, .article-content td {
+            border: 1px solid #333;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        .article-content th {
+            background: #1a1a1a;
+            color: #10b981;
+        }
+        .article-content a {
+            color: #10b981;
+            text-decoration: underline;
+        }
+        .article-content strong {
+            color: #ffffff;
+        }
+        .lang-toggle {
+            background: transparent;
+            border: 1px solid #1a1a1a;
+            color: #888888;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .lang-toggle:hover { border-color: #10b981; color: #10b981; }
+        .lang-toggle.active { border-color: #10b981; color: #10b981; }
+        .nav-link { color: #aaaaaa; transition: color 0.2s; }
+        .nav-link:hover { color: #ffffff; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <nav class="fixed top-0 left-0 right-0 z-40 px-6 py-5 flex items-center justify-between border-b border-custom" style="background-color: rgba(10, 10, 10, 0.9); backdrop-filter: blur(10px);">
+        <a href="index.html" class="text-white font-bold text-lg">狮子AI</a>
+        <div class="flex items-center gap-8">
+            <a href="index.html#work" class="nav-link text-sm">项目</a>
+            <a href="index.html#about" class="nav-link text-sm">关于</a>
+            <a href="index.html#contact" class="nav-link text-sm">联系</a>
+        </div>
+    </nav>
+
+    <main class="pt-24 pb-16 px-6">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <div class="mb-12">
+                <a href="index.html#work" class="text-accent text-sm hover:underline mb-4 inline-block">← 返回项目列表</a>
+                <h1 class="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">游戏人生 - 文字冒险实施方案</h1>
+                <div class="flex flex-wrap gap-3 text-sm text-gray-secondary">
+                    <span class="px-3 py-1 bg-[#1a1a1a] border border-custom rounded-full">AI</span>
+                    <span class="px-3 py-1 bg-[#1a1a1a] border border-custom rounded-full">LLM</span>
+                    <span class="px-3 py-1 bg-[#1a1a1a] border border-custom rounded-full">游戏</span>
+                    <span class="px-3 py-1 bg-[#1a1a1a] border border-custom rounded-full">开源方案</span>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <article class="article-content bg-[#181818] border border-custom p-8 md:p-12">
+                <h2>项目简介</h2>
+                <p>一款文字冒险类人生模拟游戏，玩家通过对话框选择不同选择来度过一生。<strong>核心创新：采用 LLM 动态生成故事剧情，而非预定义事件库。</strong></p>
+
+                <h2>🎯 目标</h2>
+                <p>构建一款文字冒险类人生模拟游戏，玩家通过对话框选择不同选择来度过一生。<strong>核心创新：采用 LLM 动态生成故事剧情，而非预定义事件库。</strong></p>
+
+                <h2>🏗️ 架构</h2>
+                <p>Web 终端风格界面 + LLM 驱动剧情生成</p>
+                <ul>
+                    <li><strong>前端:</strong> React + TypeScript，终端风格 UI</li>
+                    <li><strong>后端:</strong> Node.js + Express，提供游戏逻辑 API 和数据持久化</li>
+                    <li><strong>AI 层:</strong> LLM API（Claude/GPT）动态生成故事，通过提示词限制合规性</li>
+                    <li><strong>合规:</strong> 双层机制 - LLM 生成时限制 + 用户输入前置审查</li>
+                </ul>
+
+                <h2>🔄 核心流程</h2>
+                <pre><code>用户输入
+   ↓
+┌─────────────────────────────┐
+│   合规审查 LLM              │
+│   (判断用户输入是否合规)     │
+└─────────────────────────────┘
+   ↓ 合规
+┌─────────────────────────────┐
+│   故事生成 LLM              │
+│   (根据状态生成当前事件)     │
+└─────────────────────────────┘
+   ↓
+展示事件 + 选项给玩家
+   ↓
+玩家选择 → 更新状态 → 循环</code></pre>
+
+                <h2>📁 文件结构</h2>
+                <pre><code>life-game/
+├── shared/                    # 共享代码（服务端和客户端共用）
+│   └── types/
+│       └── index.ts          # TypeScript 类型定义（唯一类型来源）
+├── client/                    # 前端 React 应用
+│   ├── src/
+│   │   ├── components/        # UI 组件
+│   │   │   ├── Terminal.tsx   # 终端界面组件
+│   │   │   ├── Chronicle.tsx  # 编年史显示组件
+│   │   │   ├── QuestLog.tsx    # 任务日志组件
+│   │   │   └── StatsBar.tsx    # 属性状态栏
+│   │   ├── engine/            # 游戏引擎
+│   │   │   ├── GameEngine.ts      # 核心游戏引擎
+│   │   │   ├── LifeStages.ts      # 人生阶段
+│   │   │   ├── StoryGenerator.ts  # LLM 故事生成器
+│   │   │   ├── ComplianceChecker.ts # 合规审查器
+│   │   │   └── __tests__/         # 引擎测试
+│   │   ├── prompts/           # 提示词模板
+│   │   ├── data/              # 游戏数据
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   └── index.html
+├── server/                    # 后端 Express 服务
+│   ├── src/
+│   │   ├── routes/
+│   │   ├── db/
+│   │   ├── services/
+│   │   └── index.ts
+├── docs/
+│   ├── regulations/           # 法规参考文档
+│   └── game-design/           # 游戏设计文档
+└── package.json</code></pre>
+
+                <h2>🛡️ 合规性设计</h2>
+
+                <h3>双层合规机制</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>层级</th>
+                            <th>触发时机</th>
+                            <th>实现方式</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>第一层</td>
+                            <td>用户输入时</td>
+                            <td>合规审查 LLM + 规则引擎</td>
+                        </tr>
+                        <tr>
+                            <td>第二层</td>
+                            <td>故事生成时</td>
+                            <td>系统提示词内置限制</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>法规参考</h3>
+                <p>游戏内置以下法规数据，供 LLM 合规判断时参考：</p>
+                <pre><code>export const REGULATIONS = {
+  // 网络安全相关
+  网络安全法: [
+    "不得利用网络从事危害国家安全、荣誉和利益",
+    "不得煽动颠覆国家政权、推翻社会主义制度",
+    "不得煽动分裂国家、破坏国家统一",
+    "不得编造、传播虚假信息扰乱经济秩序",
+  ],
+
+  // 治安管理相关
+  治安管理处罚法: [
+    "不得散布淫秽、色情、赌博、暴力内容",
+    "不得侮辱或诽谤他人",
+    "不得制造噪音干扰他人正常生活",
+  ],
+
+  // 民法典相关
+  民法典: [
+    "不得侵犯他人人格权、隐私权、肖像权",
+    "婚姻关系遵循一夫一妻制",
+    "禁止借婚姻索取财物",
+  ],
+
+  // 未成年人保护
+  未成年人保护法: [
+    "保护未成年人身心健康",
+    "禁止向未成年人传播色情内容",
+    "禁止教唆未成年人违法犯罪",
+  ],
+};</code></pre>
+
+                <h2>💬 提示词设计</h2>
+
+                <h3>系统提示词（故事生成）</h3>
+                <pre><code>你是"人生模拟器"的游戏主持人，负责为玩家生成精彩的人生故事。
+
+【核心原则】
+1. 所有故事内容必须符合中国法律法规
+2. 故事主题：积极正面，倡导正确价值观
+3. 禁止出现：色情低俗、暴力血腥、赌博、违法犯罪内容
+4. 婚姻观：一夫一妻，倡导文明婚俗
+5. 君子爱财取之有道
+
+【故事类型库】
+可生成的人生事件类型：
+- 童年：上学、家庭、友情、兴趣培养
+- 青年：高考、大学、恋爱、第一份工作
+- 成年：职业发展、婚姻家庭、投资理财、子女教育
+- 中年：事业巅峰/转型、健康管理、家庭关系
+- 老年：退休生活、养生保健、天伦之乐
+
+【输出格式】
+每次生成必须包含：
+1. 事件标题（简洁有力）
+2. 事件描述（2-3句话，富有画面感）
+3. 3-4个选项（体现不同价值观选择）
+4. 每个选项的效果说明（对属性的影响）
+
+【选项设计原则】
+- 选项应体现不同价值观（务实、理想、家庭、事业等）
+- 选项效果要符合逻辑（重大决定影响更大）
+- 允许"普通"选项作为保底选择</code></pre>
+
+                <h3>合规审查提示词</h3>
+                <pre><code>【角色】
+你是一位严格的合规审查员，负责判断用户输入是否合规。
+
+【审查标准】
+用户输入不得包含以下内容：
+1. 色情低俗信息（性暗示、擦边内容等）
+2. 暴力血腥内容（伤害、杀人等）
+3. 赌博相关内容（赌场、赌博技巧等）
+4. 违法犯罪行为（盗窃、诈骗、贩毒等）
+5. 政治敏感内容（颠覆国家、分裂领土等）
+6. 邪教迷信内容
+
+【法规参考】
+判断时请参考以下法规：
+- 《网络安全法》第12条
+- 《治安管理处罚法》第68条、第70条
+- 《民法典》婚姻家庭编
+- 《未成年人保护法》
+
+【输出格式】
+必须返回以下JSON格式，禁止添加任何其他内容：
+{
+  "passed": true/false,
+  "reason": "如果passed为false，说明违反了哪条法规"
+}</code></pre>
+
+                <h2>✨ 技术亮点</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>特性</th>
+                            <th>实现方式</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>LLM 动态剧情</strong></td>
+                            <td>每次生成当前年龄段的专属事件</td>
+                        </tr>
+                        <tr>
+                            <td><strong>双层合规</strong></td>
+                            <td>生成时限制 + 输入时审查</td>
+                        </tr>
+                        <tr>
+                            <td><strong>状态摘要</strong></td>
+                            <td>只传递关键状态，控制 Token 消耗</td>
+                        </tr>
+                        <tr>
+                            <td><strong>阶段聚焦</strong></td>
+                            <td>每次只生成当前岁的事件，保证一致性</td>
+                        </tr>
+                        <tr>
+                            <td><strong>渐进式体验</strong></td>
+                            <td>玩家可输入自定义行动，也可跳过让 AI 随机生成</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>📋 后续扩展建议</h2>
+                <ul>
+                    <li><strong>多模型支持</strong> - 支持 Claude/GPT/KIMI 等多个 LLM 提供商</li>
+                    <li><strong>剧情记忆</strong> - 使用向量数据库存储历史剧情，辅助生成更连贯的故事</li>
+                    <li><strong>存档系统</strong> - 玩家可保存/加载游戏进度</li>
+                    <li><strong>成就系统</strong> - 完成后解锁成就徽章</li>
+                    <li><strong>多人模式</strong> - 玩家可以比较不同选择下的人生轨迹</li>
+                </ul>
+
+                <h2>⚖️ 合规性声明</h2>
+                <p><strong>法律合规:</strong> 本游戏所有内容均符合我国法律法规：</p>
+                <ol>
+                    <li><strong>LLM 生成限制</strong> - 系统提示词内置合规要求，生成的剧情不包含违规内容</li>
+                    <li><strong>用户输入审查</strong> - 用户输入需经过合规检查，不合格内容不触发剧情</li>
+                    <li><strong>虚拟设定</strong> - 游戏货币为虚拟设定，不涉及真实货币交易</li>
+                    <li><strong>婚姻观</strong> - 遵循一夫一妻制，倡导文明婚俗</li>
+                    <li><strong>价值观引导</strong> - 结局倡导正面价值观，君子爱财取之有道</li>
+                </ol>
+
+                <h2>🤝 参与贡献</h2>
+                <p>这是一个开源方案设计，期待有兴趣的开发者来实现！完整方案文档位于 <code>docs/superpowers/plans/</code> 目录。</p>
+
+                <blockquote>
+                    <strong>方案状态:</strong> 设计方案已完成，等待开发者实现
+                </blockquote>
+            </article>
+
+            <!-- Navigation -->
+            <div class="mt-12 pt-8 border-t border-custom flex justify-between">
+                <a href="index.html#work" class="text-accent hover:underline">← 返回项目列表</a>
+                <a href="index.html#contact" class="text-accent hover:underline">联系我合作 →</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-8 px-6 border-t border-custom">
+        <div class="max-w-5xl mx-auto flex items-center justify-between">
+            <p class="text-gray-secondary text-sm">© 2026 狮子AI</p>
+            <p class="text-gray-secondary text-sm">用心构建</p>
+        </div>
+    </footer>
+
+</body>
+</html>
