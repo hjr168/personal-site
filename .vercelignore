@@ -1,0 +1,19 @@
+.git/
+.next/
+node_modules/
+out/
+dist/
+
+# Local design drafts and large source assets kept outside Git deploys.
+.claude/
+bg_small.png
+circuit-design-preview.html
+landing.html
+logo-design.html
+logo-design-v2.html
+poster-preview.html
+poster-v2.html
+project 1.png
+project 1_small.png
+shizi-ai-portfolio.html
+personal site.code-workspace
