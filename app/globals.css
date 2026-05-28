@@ -655,10 +655,18 @@ input {
 
   .site-header-inner,
   .site-footer-inner,
-  .section-head,
-  .list-item {
+  .section-head {
     align-items: start;
     flex-direction: column;
+  }
+
+  .list-item {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .list-item .tag-list {
+    padding-top: 0;
   }
 
   .main-nav {
@@ -709,5 +717,42 @@ input {
 
   .article-bottom-nav {
     grid-template-columns: 1fr;
+  }
+
+  .list-item {
+    padding: 18px 0;
+    gap: 10px;
+  }
+
+  .list-item h2 {
+    font-size: clamp(20px, 5.5vw, 26px);
+    line-height: 1.28;
+  }
+
+  .list-item p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .list-item .meta-row {
+    font-size: 12px;
+    gap: 6px;
+  }
+
+  .list-item .tag {
+    font-size: 11px;
+    padding: 2px 7px;
+  }
+
+  .note-panel .tag-list {
+    gap: 6px;
+  }
+
+  .page-title {
+    font-size: clamp(32px, 9vw, 44px);
+  }
+
+  .page-lead {
+    font-size: 16px;
   }
 }
